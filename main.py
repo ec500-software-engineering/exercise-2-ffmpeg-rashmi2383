@@ -3,7 +3,8 @@ import queue
 import random
 import argparse
 import subprocess
-from threading import Thread
+import multiprocessing
+from threading import Thread, Lock
 
 MAX_WORKER_THREADS = 3
 
@@ -13,6 +14,26 @@ FFMPEG_BINARY_PATH = 'ffmpeg'
 FFMPEG_COMMAND_TEMPLATE = (
     'ffmpeg -y -i {input} -b:v {vid_bit_rate}M -r {fps} -s hd{res} {output}'
 )
+
+
+def encode_file(input_filename, output_filename, bit_rate, fps, res):
+    cmd = FFMPEG_COMMAND_TEMPLATE.format(
+        input=input_filename,
+        output=output_filename,
+        vid_bit_rate=bit_rate,
+        fps=fps,
+        res=res
+    )
+    cmd_args = cmd.split(' ')
+    proc = subprocess.Popen(
+        cmd_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    )
+    while proc.poll() is None:
+        time.sleep(
+            random.randint(1, 3)
+        )
+    ret_code = proc.returncode
+    return ret_code
 
 
 class WorkerThread(Thread):
@@ -29,7 +50,6 @@ class WorkerThread(Thread):
             except queue.Empty:
                 task_dict = None
                 pass
-
             if task_dict is not None:
                 if 'exit' in task_dict:
                     print(
@@ -45,22 +65,13 @@ class WorkerThread(Thread):
                         task_dict['output']
                     )
                 )
-                cmd = FFMPEG_COMMAND_TEMPLATE.format(
-                    input=task_dict['input'],
-                    output=task_dict['output'],
-                    vid_bit_rate=task_dict['bit_rate'],
-                    fps=task_dict['fps'],
-                    res=task_dict['res']
+                ret_code = encode_file(
+                    task_dict['input'],
+                    task_dict['output'],
+                    task_dict['bit_rate'],
+                    task_dict['fps'],
+                    task_dict['res']
                 )
-                cmd_args = cmd.split(' ')
-                proc = subprocess.Popen(
-                    cmd_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-                )
-                while proc.poll() is None:
-                    time.sleep(
-                        random.randint(1, 3)
-                    )
-                ret_code = proc.returncode
                 # work_queue.task_done()
                 if ret_code == 0:
                     print(
@@ -71,11 +82,10 @@ class WorkerThread(Thread):
                     )
                 else:
                     print(
-                        'worker {}: failed to encode file {}.\nCommand: {} | return code {}'.format(
+                        'worker {}: failed to encode file {} | return code {}'.format(
                             self._worker_id,
                             task_dict['input'],
-                            cmd,
-                            0
+                            ret_code
                         )
                     )
                 self._task_queue.task_done()

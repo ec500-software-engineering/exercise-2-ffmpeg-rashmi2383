@@ -3,8 +3,7 @@ import queue
 import random
 import argparse
 import subprocess
-import multiprocessing
-from threading import Thread, Lock
+from threading import Thread
 
 MAX_WORKER_THREADS = 3
 

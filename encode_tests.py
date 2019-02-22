@@ -13,7 +13,7 @@ class BasicEncodeTest(unittest.TestCase):
         pass
 
     def test_encode_function_should_create_new_file(self):
-        ret_code = encode_file(
+        encode_file(
             'mov.avi',
             'mov.mp4',
             '1',
@@ -33,7 +33,7 @@ class BasicEncodeTest(unittest.TestCase):
                 return line.lstrip().split(' ')[1].split('.')[0]
 
     def test_output_video_duration_should_match_input_duration(self):
-        ret_code = encode_file(
+        encode_file(
             'mov.avi',
             'mov.mp4',
             '1',

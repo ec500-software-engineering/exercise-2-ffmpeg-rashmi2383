@@ -41,7 +41,7 @@ class Test(object):
             '30',
             '480'
         )
-    assert os.path.exists('video_path')
+        assert os.path.exists('video_path')
 
     def get_video_length(self, filename):
         proc_out = subprocess.Popen(
@@ -74,6 +74,3 @@ class Test(object):
         length1 = self.get_video_length(video_path)
         length2 = self.get_video_length(output_path)
         assert length1 == length2
-
-
-Test().test_output_video_duration_should_match_input_duration('/tmp/mov.mp4')

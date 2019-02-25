@@ -3,7 +3,7 @@ import subprocess
 from main import encode_file
 
 
-class BasicEncodeTest(Object):
+class BasicEncodeTest(object):
 
     def setUp(self):
         pass

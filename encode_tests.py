@@ -1,10 +1,9 @@
 import os
-import unittest
 import subprocess
 from main import encode_file
 
 
-class BasicEncodeTest(unittest.TestCase):
+class BasicEncodeTest(Object):
 
     def setUp(self):
         pass
@@ -20,7 +19,7 @@ class BasicEncodeTest(unittest.TestCase):
             '30',
             '480'
         )
-        self.assertTrue(os.path.exists('mov.mp4'))
+        assert os.path.exists('mov.mp4')
 
     def get_video_length(self, filename):
         raw_output = subprocess.check_output(
@@ -42,7 +41,4 @@ class BasicEncodeTest(unittest.TestCase):
         )
         length1 = self.get_video_length('mov.avi')
         length2 = self.get_video_length('mov1.mp4')
-        self.assertEqual(
-            length1,
-            length2
-        )
+        assertEqual length1 == length2

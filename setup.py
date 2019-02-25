@@ -8,5 +8,6 @@ setup(
     license='',
     author='Rashmi ',
     author_email='rashmi23@bu.edu',
-    description=''
+    description='',
+    install_requires=['flake8','pytest']
 )

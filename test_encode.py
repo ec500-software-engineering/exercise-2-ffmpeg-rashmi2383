@@ -41,4 +41,4 @@ class BasicEncodeTest(Object):
         )
         length1 = self.get_video_length('mov.avi')
         length2 = self.get_video_length('mov1.mp4')
-        assertEqual length1 == length2
+        assert length1 == length2

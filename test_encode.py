@@ -40,5 +40,5 @@ class Test(object):
             '480'
         )
         length1 = self.get_video_length('mov.avi')
-        length2 = self.get_video_length('mov1.mp4')
+        length2 = self.get_video_length('mov.mp4')
         assert length1 == length2
